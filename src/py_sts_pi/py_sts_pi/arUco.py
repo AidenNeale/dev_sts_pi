@@ -28,7 +28,7 @@ class ArUcoTagReader(Node):
     '''
     # Used to store frame retrieved by subscription
     self.current_frame = None
-    self.arUcoDict = cv2.aruco.DICT_5X5_50
+    self.arUcoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_50)
     self.arUcoParams = cv2.aruco.DetectorParameters_create()
     # Used to convert between ROS and OpenCV images
     self.br = CvBridge()
