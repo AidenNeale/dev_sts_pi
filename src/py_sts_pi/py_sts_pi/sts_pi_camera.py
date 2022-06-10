@@ -26,7 +26,7 @@ class ImagePublisher(Node):
     # to the video_frames topic. The queue size is 10 messages.
     self.publisher_ = self.create_publisher(Image, 'video_frames', 10)
       
-    # We will publish a message every 0.1 seconds
+    # We will publish a message every 0.01 seconds
     timer_period = 0.01  # seconds
       
     # Create the timer
@@ -42,7 +42,7 @@ class ImagePublisher(Node):
   def timer_callback(self):
     """
     Callback function.
-    This function gets called every 0.1 seconds.
+    This function gets called every 0.01 seconds.
     """
     # Capture frame-by-frame
     # This method returns True/False as well
