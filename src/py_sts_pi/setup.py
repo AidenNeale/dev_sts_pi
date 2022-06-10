@@ -21,7 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
             'sts_pi_camera = py_sts_pi.sts_pi_camera:main',
-            'display = py_sts_pi.display:main'
+            'display = py_sts_pi.display:main',
+            'aruco = py_sts_pi.arUco:main'
         ],
     },
 )
