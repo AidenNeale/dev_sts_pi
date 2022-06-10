@@ -33,7 +33,7 @@ class ArUcoTagReader(Node):
     # Used to convert between ROS and OpenCV images
     self.br = CvBridge()
 
-    self.coordinates = ()
+    self.coordinates = []
 
 
 
