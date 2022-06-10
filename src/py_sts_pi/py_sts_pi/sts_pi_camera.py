@@ -47,6 +47,7 @@ class ImagePublisher(Node):
     # Capture frame-by-frame
     # This method returns True/False as well
     # as the video frame.
+    self.cap.set(cv2.CV_CAP_PROP_BUFFERSIZE, 3)
     ret, frame = self.cap.read()
           
     if ret == True:
