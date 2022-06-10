@@ -77,7 +77,7 @@ class ArUcoTagReader(Node):
     Callback function for subscribing to video frame feed.
     """
     # Display the message on the console
-    self.get_logger().info('Receiving video frame')
+    # self.get_logger().info('Receiving video frame')
  
     # Convert ROS Image message to OpenCV image
     self.current_frame = self.br.imgmsg_to_cv2(data)
@@ -114,7 +114,7 @@ class ArUcoTagReader(Node):
         self.publisher_.publish(self.coordinates)
  
     # Display the message on the console
-    self.get_logger().info('Publishing video frame')
+    # self.get_logger().info('Publishing video frame')
    
 
 
