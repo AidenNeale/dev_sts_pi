@@ -52,7 +52,7 @@ class ArUcoTagReader(Node):
     self.publisher_ = self.create_publisher(Float32MultiArray, 'aruco_tag', 10)
     
     # We will publish a message every 0.01 seconds
-    timer_period = 0.01  # seconds
+    timer_period = 0.05  # seconds
     
     # Create the timer
     self.timer = self.create_timer(timer_period, self.timer_callback)
