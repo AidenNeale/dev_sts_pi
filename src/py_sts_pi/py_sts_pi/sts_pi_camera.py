@@ -5,7 +5,7 @@
 # - https://automaticaddison.com
 
 # Import the necessary libraries
-import cv2 # OpenCV library
+import cv2
 import rclpy # Python Client Library for ROS 2
 from rclpy.node import Node # Handles the creation of nodes
 from sensor_msgs.msg import CompressedImage # Image is the message type
@@ -51,6 +51,7 @@ class ImagePublisher(Node):
     ret, frame = self.cap.read()
 
     if ret == True:
+      cv2.rotate(frame, cv2.ROTATE_180)
       # Publish the image.
       # The 'cv2_to_imgmsg' method converts an OpenCV
       # image to a ROS 2 image message
