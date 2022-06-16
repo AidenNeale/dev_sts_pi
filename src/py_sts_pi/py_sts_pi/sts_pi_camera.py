@@ -51,7 +51,7 @@ class ImagePublisher(Node):
     ret, frame = self.cap.read()
 
     if ret == True:
-      cv2.rotate(frame, cv2.ROTATE_180)
+      frame = cv2.rotate(frame, cv2.ROTATE_180)
       # Publish the image.
       # The 'cv2_to_imgmsg' method converts an OpenCV
       # image to a ROS 2 image message
