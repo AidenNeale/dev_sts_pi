@@ -8,7 +8,7 @@
 import math
 import rclpy # Python Client Library for ROS 2
 from rclpy.node import Node # Handles the creation of nodes
-from sensor_msgs.msg import Image # Image is the message type
+from sensor_msgs.msg import Image, CompressedImage # Image is the message type
 from sts_pi_interfaces.msg import ArUcoInfo
 from cv_bridge import CvBridge # Package to convert between ROS and OpenCV Images
 import cv2 # OpenCV library
@@ -46,7 +46,7 @@ class ArUcoTagReader(Node):
     # Create two publishers. The frame publisher will forward the subscribed frame
     # with the addition of an ArUco outline. The aruco publisher will publish infomation
     # about any detected aruco tags
-    self.publisher_frame_ = self.create_publisher(Image, 'frame', 10)
+    self.publisher_frame_ = self.create_publisher(CompressedImage, 'frame', 10)
 
     self.publisher_aruco_ = self.create_publisher(ArUcoInfo, 'aruco_tag', 10)
 
@@ -120,7 +120,7 @@ class ArUcoTagReader(Node):
             msg.theta = float(bearing)
             # Publish ArUco Tag information if one is present
             self.publisher_aruco_.publish(msg)
-      self.publisher_frame_.publish(self.br.cv2_to_imgmsg(self.current_frame))
+      self.publisher_frame_.publish(self.br.cv2_to_compressed_imgmsg(self.current_frame))
 
 
 def main(args=None):
