@@ -5,11 +5,11 @@
 # - https://automaticaddison.com
 
 # Import the necessary libraries
+import cv2 # OpenCV library
 import rclpy # Python Client Library for ROS 2
 from rclpy.node import Node # Handles the creation of nodes
 from sensor_msgs.msg import CompressedImage # Image is the message type
 from cv_bridge import CvBridge # Package to convert between ROS and OpenCV Images
-import cv2 # OpenCV library
 
 class ImagePublisher(Node):
   """

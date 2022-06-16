@@ -6,12 +6,13 @@
 
 # Import the necessary libraries
 import math
-import rclpy # Python Client Library for ROS 2
-from rclpy.node import Node # Handles the creation of nodes
-from sensor_msgs.msg import CompressedImage # Image is the message type
+
+import cv2  # OpenCV library
+import rclpy  # Python Client Library for ROS 2
+from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
+from rclpy.node import Node  # Handles the creation of nodes
+from sensor_msgs.msg import CompressedImage  # Image is the message type
 from sts_pi_interfaces.msg import ArUcoInfo
-from cv_bridge import CvBridge # Package to convert between ROS and OpenCV Images
-import cv2 # OpenCV library
 
 
 class ArUcoTagReader(Node):
