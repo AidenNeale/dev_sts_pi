@@ -58,8 +58,8 @@ class Motors(Node):
 
   def move_robot(self):
     while True:
-      explorerhat.motor.one(self.left_motor_speed)
-      explorerhat.motor.two(self.right_motor_speed)
+      explorerhat.motor.one.forwards(self.left_motor_speed)
+      explorerhat.motor.two.forwards(self.right_motor_speed)
 
 def main(args=None):
 
