@@ -18,8 +18,8 @@ class Motors(Node):
     # Initiate the Node class's constructor and give it a name
     super().__init__('motor_control')
 
-    self.left_motor_speed = 0
-    self.right_motor_speed = 0
+    self.left_motor_speed = 0.0
+    self.right_motor_speed = 0.0
     self.instruction = Twist()
 
     self.subscription = self.create_subscription(
@@ -51,8 +51,8 @@ class Motors(Node):
 
   def timer_callback(self):
     msg = MotorSpeeds()
-    msg.left = self.left_motor_speed
-    msg.right = self.right_motor_speed
+    msg.left = float(self.left_motor_speed)
+    msg.right = float(self.right_motor_speed)
     self.publisher_.publish(msg)
 
 
