@@ -39,14 +39,35 @@ class Motors(Node):
     # Create the timer
     self.timer = self.create_timer(timer_period, self.timer_callback)
 
-    self.robot_motor_thread = Thread(target=self.move_robot, name="Motor Control")
-    self.robot_motor_thread.start()
+
+  def determine_speed(self, twist_msg):
+    linear_velocity = twist_msg["linear"]["x"] * MAX_SPEED
+    angular_velocity = twist_msg["angular"]["z"]
+
+    # Hard limits speeds to prevent motor problems from incorrect Twist messages
+    if abs(linear_velocity) > MAX_SPEED: 
+        linear_velocity %= (MAX_SPEED + 1) 
+    
+    if (angular_velocity != 0 and linear_velocity != 0): # STS-Pi is driving forwards with angular velocity
+      if angular_velocity < 0: # Turn Left, left wheel slowed
+        self.left_motor_speed = linear_velocity * angular_velocity
+        self.right_motor_speed = linear_velocity
+      elif angular_velocity > 0: # Turn Right, right wheel slowed
+        self.left_motor_speed = linear_velocity
+        self.right_motor_speed = linear_velocity * angular_velocity
+
+    else: # STS-Pi is driving forwards with no angular velocity
+      self.left_motor_speed = self.right_motor_speed = linear_velocity
 
 
   def listener_callback(self, data):
     # 'data' is in the form of a Twist
     # This is turned into relative movement 
-    self.instruction = data
+    self.determine_speed(data)
+
+    #Turn instruction to speed
+    explorerhat.motor.one.forwards(self.left_motor_speed)
+    explorerhat.motor.two.forwards(self.right_motor_speed)
 
 
   def timer_callback(self):
@@ -54,12 +75,7 @@ class Motors(Node):
     msg.left = float(self.left_motor_speed)
     msg.right = float(self.right_motor_speed)
     self.publisher_.publish(msg)
-
-
-  def move_robot(self):
-    while True:
-      explorerhat.motor.one.forwards(self.left_motor_speed)
-      explorerhat.motor.two.forwards(self.right_motor_speed)
+      
 
 def main(args=None):
 
