@@ -2,6 +2,8 @@ import explorerhat
 import rclpy # Python Client Library for ROS 2
 from rclpy.node import Node # Handles the creation of nodes
 from geometry_msgs.msg import Twist
+from sts_pi_interfaces.msg import MotorSpeeds
+from threading import Thread
 
 MAX_SPEED = 100
 
@@ -16,8 +18,9 @@ class Motors(Node):
     # Initiate the Node class's constructor and give it a name
     super().__init__('motor_control')
 
-    self.left = 0
-    self.right = 0
+    self.left_motor_speed = 0
+    self.right_motor_speed = 0
+    self.instruction = Twist()
 
     self.subscription = self.create_subscription(
       Twist,
@@ -28,7 +31,7 @@ class Motors(Node):
 
     # Create the publisher. This publisher will publish an Image
     # to the video_frames topic. The queue size is 10 messages.
-    self.publisher_ = self.create_publisher(Twist, 'motor_speeds', 10)
+    self.publisher_ = self.create_publisher(MotorSpeeds, 'motor_speeds', 10)
 
     # We will publish a message every 0.05 seconds
     timer_period = 0.05  # seconds
@@ -36,28 +39,27 @@ class Motors(Node):
     # Create the timer
     self.timer = self.create_timer(timer_period, self.timer_callback)
 
+    self.robot_motor_thread = Thread(target=self.move_robot, name="Motor Control")
+    self.robot_motor_thread.start()
+
+
   def listener_callback(self, data):
     # 'data' is in the form of a Twist
     # This is turned into relative movement 
-    print(data)
+    self.instruction = data
 
 
   def timer_callback(self):
-    """
-    Callback function.
-    This function gets called every 0.01 seconds.
-    """
-    # Capture frame-by-frame
-    # This method returns True/False as well
-    # as the video frame.
-      # self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
-    ret, frame = self.cap.read()
+    msg = MotorSpeeds()
+    msg.left = self.left_motor_speed
+    msg.right = self.right_motor_speed
+    self.publisher_.publish(msg)
 
-    if ret == True:
-      # Publish the image.
-      # The 'cv2_to_imgmsg' method converts an OpenCV
-      # image to a ROS 2 image message
-      self.publisher_.publish()
+
+  def move_robot(self):
+    while True:
+      explorerhat.motor.one(self.left_motor_speed)
+      explorerhat.motor.two(self.right_motor_speed)
 
 def main(args=None):
 
