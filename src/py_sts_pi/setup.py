@@ -23,6 +23,7 @@ setup(
             'sts_pi_camera = py_sts_pi.sts_pi_camera:main',
             'display = py_sts_pi.display:main',
             'aruco = py_sts_pi.arUco:main',
+            'motors = py_sts_pi.motor_control:main',
             'simpub = py_sts_pi.simpub:main'
         ],
     },
