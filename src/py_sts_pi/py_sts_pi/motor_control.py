@@ -66,8 +66,14 @@ class Motors(Node):
     self.determine_speed(data)
 
     #Turn instruction to speed
-    explorerhat.motor.one.forwards(self.left_motor_speed)
-    explorerhat.motor.two.forwards(self.right_motor_speed)
+    if self.left_motor_speed < 0:
+      explorerhat.motor.one.backwards(abs(self.left_motor_speed))
+    else:
+      explorerhat.motor.one.forwards(self.left_motor_speed)
+    if self.right_motor_speed < 0:
+      explorerhat.motor.two.backwards(abs(self.right_motor_speed))
+    else:
+      explorerhat.motor.two.forwards(self.right_motor_speed)
 
 
   def timer_callback(self):
