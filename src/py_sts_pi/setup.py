@@ -24,7 +24,7 @@ setup(
             'display = py_sts_pi.display:main',
             'aruco = py_sts_pi.arUco:main',
             'motors = py_sts_pi.motor_control:main',
-            'flashcard = py_sts_pi.flashcardDemo:main',
+            'flashcard = py_sts_pi.flashcard_demo:main',
             'simpub = py_sts_pi.simpub:main'
         ],
     },
