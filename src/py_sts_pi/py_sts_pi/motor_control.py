@@ -50,11 +50,11 @@ class Motors(Node):
     
     if (angular_velocity != 0 and linear_velocity != 0): # STS-Pi is driving forwards with angular velocity
       if angular_velocity < 0: # Turn Left, left wheel slowed
-        self.left_motor_speed = linear_velocity * (1-abs(angular_velocity))
+        self.left_motor_speed = linear_velocity * (1-abs(angular_velocity * 2))
         self.right_motor_speed = linear_velocity
       elif angular_velocity > 0: # Turn Right, right wheel slowed
         self.left_motor_speed = linear_velocity
-        self.right_motor_speed = linear_velocity * (1 - abs(angular_velocity))
+        self.right_motor_speed = linear_velocity * (1 - abs(angular_velocity * 2))
 
     else: # STS-Pi is driving forwards with no angular velocity
       self.left_motor_speed = self.right_motor_speed = linear_velocity
