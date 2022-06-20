@@ -38,7 +38,7 @@ class SimplePublisher(Node):
     # msg.linear.z = 0.0
     # msg.angular.x = 0.0
     # msg.angular.y = 0.0
-    msg.angular.z = 1.0
+    # msg.angular.z = 0.0
 
 
     self.publisher_.publish(msg)
