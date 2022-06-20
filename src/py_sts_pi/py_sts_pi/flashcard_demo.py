@@ -78,6 +78,8 @@ class FlashcardDemo(Node):
       self.angularMovement(msg, -1.0)
     elif self.arucoID == 6: # Spin right on the spot
       self.angularMovement(msg, 1.0)
+    elif self.arucoID == 7:
+      self.simpleSquare(msg)
 
 
   def stopMovement(self, msg):
@@ -99,6 +101,17 @@ class FlashcardDemo(Node):
     msg.linear.x = speed
     msg.angular.z = angular
     self.publisher_.publish(msg)
+
+  def simpleSquare(self, msg):
+    if self.movePosition >= 44:
+      self.movePosition = 0
+    
+    if self.movePosition < 30:
+      self.linearMovement(msg, 1.0)
+      self.movePosition += 1
+    elif self.movePosition < 44: # 44 is a lil' little, 45 a lil' too much
+      self.combinedMovement(msg, 1.0, 1.0)
+      self.movePosition += 1
 
 def main(args=None):
 
