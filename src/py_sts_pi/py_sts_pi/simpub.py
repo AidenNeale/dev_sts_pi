@@ -3,6 +3,7 @@ import rclpy # Python Client Library for ROS 2
 from rclpy.node import Node # Handles the creation of nodes
 from std_msgs.msg import Float32MultiArray # Image is the message type
 from sts_pi_interfaces.msg import ArUcoInfo
+from geometry_msgs.msg import Twist
 
 class SimplePublisher(Node):
   """
@@ -17,7 +18,7 @@ class SimplePublisher(Node):
 
     # Create the publisher. This publisher will publish an Image
     # to the video_frames topic. The queue size is 10 messages.
-    self.publisher_ = self.create_publisher(ArUcoInfo, 'stuff', 10)
+    self.publisher_ = self.create_publisher(Twist, 'twist_motor', 10)
 
     # We will publish a message every 0.01 seconds
     timer_period = 0.05  # seconds
@@ -31,12 +32,13 @@ class SimplePublisher(Node):
     Callback function.
     This function gets called every 0.01 seconds.
     """
-    msg = ArUcoInfo()
-    msg.id = 10
-    msg.x = 1.0
-    msg.y = 1.0
-    msg.z = 0.0
-    msg.theta = 10.0
+    msg = Twist()
+    msg.linear.x = 1.0
+    # msg.linear.y = 0.0
+    # msg.linear.z = 0.0
+    # msg.angular.x = 0.0
+    # msg.angular.y = 0.0
+    # msg.angular.z = 1.0
 
 
     self.publisher_.publish(msg)
