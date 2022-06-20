@@ -10,7 +10,7 @@ from rclpy.node import Node  # Handles the creation of nodes
 from sts_pi_interfaces.msg import ArUcoInfo
 from geometry_msgs.msg import Twist
 
-class ImageSubscriber(Node):
+class FlashcardDemo(Node):
   """
   Create an ImageSubscriber class, which is a subclass of the Node class.
   """
@@ -19,10 +19,8 @@ class ImageSubscriber(Node):
     Class constructor to set up the node
     """
     # Initiate the Node class's constructor and give it a name
-    super().__init__('display')
+    super().__init__('FlashcardDemo')
 
-    # Create the subscriber. This subscriber will receive an Image
-    # from the video_frames topic. The queue size is 10 messages.
     self.subscription = self.create_subscription(
       ArUcoInfo,
       'aruco_tag',
@@ -108,15 +106,15 @@ def main(args=None):
   rclpy.init(args=args)
 
   # Create the node
-  image_subscriber = ImageSubscriber()
+  flashcard_node = FlashcardDemo()
 
   # Spin the node so the callback function is called.
-  rclpy.spin(image_subscriber)
+  rclpy.spin(flashcard_node)
 
   # Destroy the node explicitly
   # (optional - otherwise it will be done automatically
   # when the garbage collector destroys the node object)
-  image_subscriber.destroy_node()
+  flashcard_node.destroy_node()
 
   # Shutdown the ROS client library for Python
   rclpy.shutdown()
