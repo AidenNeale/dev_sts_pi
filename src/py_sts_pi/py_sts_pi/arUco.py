@@ -72,7 +72,7 @@ class ArUcoTagReader(Node):
 
     Subscription:
     -------------
-    video_frames: This is a default ROS2 msg format of an image from sensor_msgs.Image
+    video_frames: This is a default ROS2 msg format of a compressed image from sensor_msgs.msgs.CompressedImage
 
     Published:
     -----------
