@@ -34,15 +34,7 @@ class FlashcardDemo(Node):
       10
     )
 
-    # We will publish a message every 0.05 seconds
-    timer_period = 0.05  # seconds
-
-    # Create the timer
-    self.timer = self.create_timer(timer_period, self.timer_callback)
-
-    self.arucoID = -1
     self.arucoTag = None
-    self.movePosition = 0
 
 
   def listener_callback(self, data):
@@ -53,17 +45,29 @@ class FlashcardDemo(Node):
     # self.get_logger().info('Receiving video frame')
 
     # Convert ROS Image message to OpenCV image
+    
+    self.arucoTag = data
+    if data.id == -1:
+      self.stop_those_bots()
+    else:
+      self.move_those_bots()
 
-    if self.arucoID != data.id:
-      self.arucoID = data.id
-      self.arucoTag = data
-      self.movePosition = 0
-
-
-  def timer_callback(self):
+  def move_those_bots(self):
     msg = Twist()
+    if (self.arucoTag.x <= 260):
+      #turn right
+      self.combinedMovement(msg, 0.5, 0.3)
+    elif (self.arucoTag.x >= 380):
+      # turn left
+      self.combinedMovement(msg, 0.5, -0.3)
+    else:
+      #drive straight
+      self.linearMovement(msg, 0.5)
+    
 
-
+  def stop_those_bots(self):
+    msg = Twist()
+    self.stopMovement(msg)
 
   def stopMovement(self, msg):
     msg.linear.x = 0.0
