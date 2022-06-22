@@ -121,6 +121,14 @@ class ArUcoTagReader(Node):
             msg.theta = float(bearing)
             # Publish ArUco Tag information if one is present
             self.publisher_aruco_.publish(msg)
+      else:
+        msg.id = -1
+        msg.x  = -1.0
+        msg.y  = -1.0
+        msg.z  = -1.0
+        msg.theta = -1000.0
+        # Publish ArUco Tag information if one is present
+        self.publisher_aruco_.publish(msg)
       self.publisher_frame_.publish(self.br.cv2_to_compressed_imgmsg(self.current_frame))
 
 
