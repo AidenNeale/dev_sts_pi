@@ -26,6 +26,7 @@ setup(
             'motors = py_sts_pi.motor_control:main',
             'flashcard = py_sts_pi.flashcard_demo:main',
             'follow_tag = py_sts_pi.follow_tag_demo:main',
+            'joystick = py_sts_pi.joystick_demo:main',
             'simpub = py_sts_pi.simpub:main'
         ],
     },
