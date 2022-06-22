@@ -44,6 +44,7 @@ class ImageSubscriber(Node):
 
     # Convert ROS Image message to OpenCV image
     current_frame = self.br.compressed_imgmsg_to_cv2(data)
+    cv2.namedWindow('camera',cv2.WINDOW_NORMAL)
     # Display image
     cv2.imshow("camera", current_frame)
 
