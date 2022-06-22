@@ -54,10 +54,10 @@ class FlashcardDemo(Node):
 
   def move_those_bots(self):
     msg = Twist()
-    if (self.arucoTag.x <= 260):
+    if (self.arucoTag.x <= 300):
       #turn right
       self.combinedMovement(msg, 0.5, 0.3)
-    elif (self.arucoTag.x >= 380):
+    elif (self.arucoTag.x >= 340):
       # turn left
       self.combinedMovement(msg, 0.5, -0.3)
     else:
