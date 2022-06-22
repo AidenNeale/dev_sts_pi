@@ -25,6 +25,7 @@ setup(
             'aruco = py_sts_pi.arUco:main',
             'motors = py_sts_pi.motor_control:main',
             'flashcard = py_sts_pi.flashcard_demo:main',
+            'follow_tag = py_sts_pi.follow_tag_demo:main',
             'simpub = py_sts_pi.simpub:main'
         ],
     },
