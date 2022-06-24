@@ -8,7 +8,7 @@ def generate_launch_description():
     return launch.LaunchDescription([
         launch.actions.DeclareLaunchArgument(
             'node_prefix',
-            default_value=[launch.substitutions.EnvironmentVariable('ROBOT_ID'), '_'],
+            default_value=[launch.substitutions.EnvironmentVariable('ROBOT_ID')],
             description='Prefix for node names',
         ),
         launch_ros.actions.Node(
