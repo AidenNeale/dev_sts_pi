@@ -10,7 +10,7 @@ from rclpy.node import Node  # Handles the creation of nodes
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
 
-class FlashcardDemo(Node):
+class Joystick(Node):
   """
   Create an ImageSubscriber class, which is a subclass of the Node class.
   """
@@ -19,7 +19,7 @@ class FlashcardDemo(Node):
     Class constructor to set up the node
     """
     # Initiate the Node class's constructor and give it a name
-    super().__init__('FlashcardDemo')
+    super().__init__('Joystick')
 
     self.subscription = self.create_subscription(
       Joy,
@@ -82,15 +82,15 @@ def main(args=None):
   rclpy.init(args=args)
 
   # Create the node
-  flashcard_node = FlashcardDemo()
+  joystick_node = Joystick()
 
   # Spin the node so the callback function is called.
-  rclpy.spin(flashcard_node)
+  rclpy.spin(joystick_node)
 
   # Destroy the node explicitly
   # (optional - otherwise it will be done automatically
   # when the garbage collector destroys the node object)
-  flashcard_node.destroy_node()
+  joystick_node.destroy_node()
 
   # Shutdown the ROS client library for Python
   rclpy.shutdown()
