@@ -6,6 +6,7 @@ import launch_ros.actions
 
 def generate_launch_description():
     return launch.LaunchDescription([
+        #The following nodes control the human controlled robots
         launch_ros.actions.Node(
             package='py_sts_pi',
             executable='aruco',
@@ -45,5 +46,36 @@ def generate_launch_description():
             package='joy', 
             executable='joy_node',
             namespace='driver_2',
+        ),
+        #The following nodes control the autonomous following robots
+        launch_ros.actions.Node(
+            package='py_sts_pi',
+            executable='aruco',
+            namespace='follower_1',
+        ),
+        launch_ros.actions.Node(
+            package='py_sts_pi', 
+            executable='display',
+            namespace='follower_1',
+        ),
+        launch_ros.actions.Node(
+            package='py_sts_pi', 
+            executable='follow_tag',
+            namespace='follower_1',
+        ),
+        launch_ros.actions.Node(
+            package='py_sts_pi',
+            executable='aruco',
+            namespace='follower_2',
+        ),
+        launch_ros.actions.Node(
+            package='py_sts_pi', 
+            executable='display',
+            namespace='follower_2',
+        ),
+        launch_ros.actions.Node(
+            package='py_sts_pi', 
+            executable='follow_tag',
+            namespace='follower_2',
         ),
     ])
