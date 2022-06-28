@@ -41,8 +41,8 @@ class Motors(Node):
 
 
   def determine_speed(self, twist_msg):
-    linear_velocity = twist_msg.linear.x
-    angular_velocity = twist_msg.angular.z
+    linear_velocity = 1.0#twist_msg.linear.x
+    angular_velocity = 0.1#twist_msg.angular.z
     b = 0.12
     r = 0.025
 
