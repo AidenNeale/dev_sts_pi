@@ -96,11 +96,18 @@ class ArUcoTagReader(Node):
       (tags, ids, rejected) = cv2.aruco.detectMarkers(self.current_frame,
         self.arUcoDict, parameters=self.arUcoParams)
       if (len(tags) > 0):
-        cv2.aruco.drawDetectedMarkers(self.current_frame, tags, borderColor = (0, 255, 0))
+        # cv2.aruco.drawDetectedMarkers(self.current_frame, tags, borderColor = (0, 255, 0), width=4)
 
         if (len(tags) > 1):
           self.get_logger().info('Only one ArUco tag can be in frame at any one time')
         else:
+          
+          corners = tags[0].tolist()[0]
+          cv2.line(self.current_frame, (int(corners[0][0]), int(corners[0][1])), (int(corners[1][0]), int(corners[1][1])), (0, 255, 0), 10, lineType=cv2.LINE_AA)
+          cv2.line(self.current_frame, (int(corners[1][0]), int(corners[1][1])), (int(corners[2][0]), int(corners[2][1])), (0, 255, 0), 10, lineType=cv2.LINE_AA)
+          cv2.line(self.current_frame, (int(corners[2][0]), int(corners[2][1])), (int(corners[3][0]), int(corners[3][1])), (0, 255, 0), 10, lineType=cv2.LINE_AA)
+          cv2.line(self.current_frame, (int(corners[3][0]), int(corners[3][1])), (int(corners[0][0]), int(corners[0][1])), (0, 255, 0), 10, lineType=cv2.LINE_AA)
+
           ids = ids.flatten()
           for (markerCorner, markerID) in zip(tags, ids):
             corners = markerCorner.reshape((4, 2))
