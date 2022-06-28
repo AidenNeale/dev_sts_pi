@@ -47,8 +47,8 @@ class Motors(Node):
     r = 2.5
 
 
-    self.left_motor_speed = ((linear_velocity + (angular_velocity * b / 2)) / r) * 250
-    self.right_motor_speed = ((linear_velocity - (angular_velocity * b / 2)) / r) * 250
+    self.left_motor_speed = ((linear_velocity / r)+ ((angular_velocity / r) * (b / 2))) * 250
+    self.right_motor_speed = ((linear_velocity / r) - ((angular_velocity / r) * (b / 2))) * 250
 
     if self.left_motor_speed > MAX_SPEED:
       self.left_motor_speed = MAX_SPEED
