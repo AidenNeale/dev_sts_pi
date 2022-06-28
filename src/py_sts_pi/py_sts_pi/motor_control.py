@@ -80,7 +80,7 @@ class Motors(Node):
     # 'data' is in the form of a Twist
     # This is turned into relative movement 
     self.determine_speed(data)
-
+    self.left_motor_speed = self.right_motor_speed = 100
     #Turn instruction to speed
     if self.left_motor_speed < 0:
       explorerhat.motor.one.backwards(abs(self.left_motor_speed))
