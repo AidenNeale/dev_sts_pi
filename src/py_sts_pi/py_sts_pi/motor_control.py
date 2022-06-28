@@ -41,14 +41,15 @@ class Motors(Node):
 
 
   def determine_speed(self, twist_msg):
-    linear_velocity = 0.5#twist_msg.linear.x
-    angular_velocity = 1.0#twist_msg.angular.z
+    linear_velocity = 0.146#twist_msg.linear.x
+    angular_velocity = 0.0#twist_msg.angular.z
     b = 0.12
     r = 0.025
 
+    scale_factor = 2000/117
 
-    self.left_motor_speed = ((linear_velocity - (angular_velocity * b / 2)) / r)
-    self.right_motor_speed = ((linear_velocity + (angular_velocity * b / 2)) / r)
+    self.left_motor_speed = ((linear_velocity - (angular_velocity * b / 2)) / r) * scale_factor
+    self.right_motor_speed = ((linear_velocity + (angular_velocity * b / 2)) / r) * scale_factor
 
     if self.left_motor_speed > MAX_SPEED:
       self.left_motor_speed = MAX_SPEED
@@ -75,12 +76,12 @@ class Motors(Node):
     # else: # STS-Pi is driving forwards with no angular velocity
     #   self.left_motor_speed = self.right_motor_speed = linear_velocity
 
-
+#2m: 13.7s 1m: 6.85s 0.146m/s
   def listener_callback(self, data):
     # 'data' is in the form of a Twist
     # This is turned into relative movement 
     self.determine_speed(data)
-    self.left_motor_speed = self.right_motor_speed = 100
+    # self.left_motor_speed = self.right_motor_speed = 100
     #Turn instruction to speed
     if self.left_motor_speed < 0:
       explorerhat.motor.one.backwards(abs(self.left_motor_speed))
