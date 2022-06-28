@@ -47,10 +47,17 @@ class Motors(Node):
     r = 2.5
 
 
-    self.left_motor_speed = (linear_velocity - (angular_velocity * b / 2)) / r
-    self.right_motor_speed = (linear_velocity + (angular_velocity * b / 2)) / r
+    self.left_motor_speed = ((linear_velocity - (angular_velocity * b / 2)) / r) * 5
+    self.right_motor_speed = ((linear_velocity + (angular_velocity * b / 2)) / r) * 5
 
-
+    if self.left_motor_speed > MAX_SPEED:
+      self.left_motor_speed = MAX_SPEED
+    elif self.left_motor_speed < -MAX_SPEED:
+      self.left_motor_speed = -MAX_SPEED
+    if self.right_motor_speed > MAX_SPEED:
+      self.right_motor_speed = MAX_SPEED
+    elif self.right_motor_speed < -MAX_SPEED:
+      self.right_motor_speed = -MAX_SPEED
     # # Hard limits speeds to prevent motor problems from incorrect Twist messages
     # if abs(linear_velocity) > MAX_SPEED: 
     #     linear_velocity %= (MAX_SPEED + 1) 
