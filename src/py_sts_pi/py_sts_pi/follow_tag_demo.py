@@ -56,13 +56,13 @@ class FlashcardDemo(Node):
     msg = Twist()
     if (self.arucoTag.x <= 300):
       #turn right
-      self.combinedMovement(msg, 0.0, 0.1)
+      self.combinedMovement(msg, 0.4, 0.3)
     elif (self.arucoTag.x >= 340):
       # turn left
-      self.combinedMovement(msg, 0.0, -0.1)
+      self.combinedMovement(msg, 0.4, -0.3)
     else:
       #drive straight
-      self.linearMovement(msg, 0.5)
+      self.linearMovement(msg, 0.7)
     
 
   def stop_those_bots(self):
