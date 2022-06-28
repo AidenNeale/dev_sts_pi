@@ -56,10 +56,10 @@ class FlashcardDemo(Node):
     msg = Twist()
     if (self.arucoTag.x <= 300):
       #turn right
-      self.combinedMovement(msg, 0.5, 0.3)
+      self.combinedMovement(msg, 0.0, 0.1)
     elif (self.arucoTag.x >= 340):
       # turn left
-      self.combinedMovement(msg, 0.5, -0.3)
+      self.combinedMovement(msg, 0.0, -0.1)
     else:
       #drive straight
       self.linearMovement(msg, 0.5)
