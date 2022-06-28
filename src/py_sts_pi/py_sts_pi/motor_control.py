@@ -43,12 +43,12 @@ class Motors(Node):
   def determine_speed(self, twist_msg):
     linear_velocity = twist_msg.linear.x
     angular_velocity = twist_msg.angular.z
-    b = 12
-    r = 2.5
+    b = 0.12
+    r = 0.025
 
 
-    self.left_motor_speed = ((linear_velocity / r)+ ((angular_velocity / r) * (b / 2)))
-    self.right_motor_speed = ((linear_velocity / r) - ((angular_velocity / r) * (b / 2)))
+    self.left_motor_speed = ((linear_velocity - (angular_velocity * b / 2)) / r)
+    self.right_motor_speed = ((linear_velocity + (angular_velocity * b / 2)) / r)
 
     if self.left_motor_speed > MAX_SPEED:
       self.left_motor_speed = MAX_SPEED
