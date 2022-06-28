@@ -43,21 +43,29 @@ class Motors(Node):
   def determine_speed(self, twist_msg):
     linear_velocity = twist_msg.linear.x * MAX_SPEED
     angular_velocity = twist_msg.angular.z
-
-    # Hard limits speeds to prevent motor problems from incorrect Twist messages
+    b = 12
+    r = 2.5
     if abs(linear_velocity) > MAX_SPEED: 
-        linear_velocity %= (MAX_SPEED + 1) 
-    
-    if (angular_velocity != 0): # STS-Pi is driving forwards with angular velocity
-      if angular_velocity < 0: # Turn Left, left wheel slowed
-        self.left_motor_speed = linear_velocity * (1-abs(angular_velocity * 2))
-        self.right_motor_speed = linear_velocity
-      elif angular_velocity > 0: # Turn Right, right wheel slowed
-        self.left_motor_speed = linear_velocity
-        self.right_motor_speed = linear_velocity * (1 - abs(angular_velocity * 2))
+      linear_velocity %= (MAX_SPEED + 1) 
 
-    else: # STS-Pi is driving forwards with no angular velocity
-      self.left_motor_speed = self.right_motor_speed = linear_velocity
+    self.left_motor_speed = (linear_velocity - (angular_velocity * b / 2)) / r
+    self.right_motor_speed = (linear_velocity + (angular_velocity * b / 2)) / r
+    # # Hard limits speeds to prevent motor problems from incorrect Twist messages
+    # if abs(linear_velocity) > MAX_SPEED: 
+    #     linear_velocity %= (MAX_SPEED + 1) 
+    
+    # if (angular_velocity != 0 and linear_velocity != 0): # STS-Pi is driving forwards with angular velocity
+    #   if angular_velocity < 0: # Turn Left, left wheel slowed
+    #     self.left_motor_speed = linear_velocity * (1-abs(angular_velocity * 2))
+    #     self.right_motor_speed = linear_velocity
+    #   elif angular_velocity > 0: # Turn Right, right wheel slowed
+    #     self.left_motor_speed = linear_velocity
+    #     self.right_motor_speed = linear_velocity * (1 - abs(angular_velocity * 2))
+
+    # elif (angular_velocity != 0):
+
+    # else: # STS-Pi is driving forwards with no angular velocity
+    #   self.left_motor_speed = self.right_motor_speed = linear_velocity
 
 
   def listener_callback(self, data):
