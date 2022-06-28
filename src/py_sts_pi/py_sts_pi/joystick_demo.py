@@ -48,10 +48,12 @@ class Joystick(Node):
     self.joystick = data.axes # [0] = Left and Right, [1] = Up and Down
     if (abs(self.joystick[1]) < 0.15):
       self.stopMovement(msg)
-    elif (abs(self.joystick[0]) >= 0.25):
+    else:
       self.combinedMovement(msg, self.joystick[1], self.joystick[0])
-    elif (abs(self.joystick[1]) >= 0.15):
-      self.combinedMovement(msg, self.joystick[1], self.joystick[0])
+    # elif (abs(self.joystick[0]) >= 0.25):
+    #   self.combinedMovement(msg, self.joystick[1], self.joystick[0])
+    # elif (abs(self.joystick[1]) >= 0.05):
+    #   self.combinedMovement(msg, self.joystick[1], self.joystick[0])
     # print(self.joystick)
     
 
