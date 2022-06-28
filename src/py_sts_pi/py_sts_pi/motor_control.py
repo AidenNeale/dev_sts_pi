@@ -1,4 +1,5 @@
 import explorerhat
+import math
 import rclpy # Python Client Library for ROS 2
 from rclpy.node import Node # Handles the creation of nodes
 from geometry_msgs.msg import Twist
@@ -41,12 +42,13 @@ class Motors(Node):
 
 
   def determine_speed(self, twist_msg):
-    linear_velocity = 0.146#twist_msg.linear.x
-    angular_velocity = 0.0#twist_msg.angular.z
+    linear_velocity = 0.146 / 2#twist_msg.linear.x
+    angular_velocity = math.radians(10.0)#twist_msg.angular.z
+
     b = 0.12
     r = 0.025
-
-    scale_factor = 2000/117
+    max_lin_speed = 0.146
+    scale_factor = 100 / (max_lin_speed / r)
 
     self.left_motor_speed = ((linear_velocity - (angular_velocity * b / 2)) / r) * scale_factor
     self.right_motor_speed = ((linear_velocity + (angular_velocity * b / 2)) / r) * scale_factor
