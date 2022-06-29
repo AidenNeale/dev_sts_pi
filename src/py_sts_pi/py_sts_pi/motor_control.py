@@ -61,22 +61,7 @@ class Motors(Node):
       self.right_motor_speed = MAX_SPEED
     elif self.right_motor_speed < -MAX_SPEED:
       self.right_motor_speed = -MAX_SPEED
-    # # Hard limits speeds to prevent motor problems from incorrect Twist messages
-    # if abs(linear_velocity) > MAX_SPEED: 
-    #     linear_velocity %= (MAX_SPEED + 1) 
-    
-    # if (angular_velocity != 0 and linear_velocity != 0): # STS-Pi is driving forwards with angular velocity
-    #   if angular_velocity < 0: # Turn Left, left wheel slowed
-    #     self.left_motor_speed = linear_velocity * (1-abs(angular_velocity * 2))
-    #     self.right_motor_speed = linear_velocity
-    #   elif angular_velocity > 0: # Turn Right, right wheel slowed
-    #     self.left_motor_speed = linear_velocity
-    #     self.right_motor_speed = linear_velocity * (1 - abs(angular_velocity * 2))
 
-    # elif (angular_velocity != 0):
-
-    # else: # STS-Pi is driving forwards with no angular velocity
-    #   self.left_motor_speed = self.right_motor_speed = linear_velocity
 
 #2m: 13.7s 1m: 6.85s 0.146m/s
   def listener_callback(self, data):
