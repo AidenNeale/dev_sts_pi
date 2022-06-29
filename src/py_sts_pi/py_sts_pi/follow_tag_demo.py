@@ -78,7 +78,7 @@ class FlashcardDemo(Node):
 
   def spin_those_bots(self):
     msg = Twist()
-    self.combinedMovement(msg, 0.0, 0.275)
+    self.combinedMovement(msg, 0.0, 0.325)
 
   def stop_those_bots(self):
     msg = Twist()

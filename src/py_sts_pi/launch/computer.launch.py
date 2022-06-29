@@ -83,4 +83,9 @@ def generate_launch_description():
             executable='follow_tag',
             namespace='follower_2',
         ),
+        launch_ros.actions.Node(
+            package='py_sts_pi', 
+            executable='threshold',
+            namespace='follower_2',
+        ),
     ])
