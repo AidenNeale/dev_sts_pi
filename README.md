@@ -14,7 +14,16 @@ This is the repository for the University of York's Computer Science Open Day de
   * 
 
 ## Usage
-
+ - Assuming correct installation and setup, create three terminals and ssh into two robots.
+ - On each robot
+  - Navigate to the root directory of the project (/dev_sts_pi)
+  - Run: bash setup_perms.sh and enter the password when prompted
+  - Run: source install/setup.bash
+  - Run: ros2 launch py_sts_pi sts.launch.py
+- On the third terminal:
+  - Navigate to the root directory of the project (/dev_sts_pi)
+  - Run: source install/setup.bash
+  - Run: ros2 launch py_sts_pi computer.launch.py
 
 ## To Do
 
