@@ -48,26 +48,32 @@ class FlashcardDemo(Node):
     
     self.arucoTag = data
     if data.id == -1:
-      self.stop_those_bots()
+      self.spin_those_bots()
     else:
       self.move_those_bots()
 
   def move_those_bots(self):
     msg = Twist()
-    if (self.arucoTag.x <= 300):
+    if (self.arucoTag.x <= 150):
+      #turn right
+      self.combinedMovement(msg, 0.4, 0.65)
+    elif (self.arucoTag.x <= 300):
       #turn right
       self.combinedMovement(msg, 0.4, 0.3)
+    elif (self.arucoTag.x >= 480):
+      # turn left
+      self.combinedMovement(msg, 0.4, -0.65)
     elif (self.arucoTag.x >= 340):
       # turn left
       self.combinedMovement(msg, 0.4, -0.3)
     else:
       #drive straight
       self.linearMovement(msg, 0.7)
-    
 
-  def stop_those_bots(self):
+
+  def spin_those_bots(self):
     msg = Twist()
-    self.stopMovement(msg)
+    self.combinedMovement(msg, 0.0, 0.25)
 
   def stopMovement(self, msg):
     msg.linear.x = 0.0
