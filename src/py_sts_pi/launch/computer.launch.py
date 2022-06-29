@@ -64,6 +64,11 @@ def generate_launch_description():
             namespace='follower_1',
         ),
         launch_ros.actions.Node(
+            package='py_sts_pi', 
+            executable='threshold',
+            namespace='follower_1',
+        ),
+        launch_ros.actions.Node(
             package='py_sts_pi',
             executable='aruco',
             namespace='follower_2',
