@@ -4,7 +4,6 @@ import rclpy # Python Client Library for ROS 2
 from rclpy.node import Node # Handles the creation of nodes
 from geometry_msgs.msg import Twist
 from sts_pi_interfaces.msg import MotorSpeeds
-from threading import Thread
 
 MAX_SPEED = 100
 
