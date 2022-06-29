@@ -48,7 +48,7 @@ class Motors(Node):
     scale_factor = 100 / (max_lin_speed / r)
 
     linear_velocity = twist_msg.linear.x * max_lin_speed
-    angular_velocity = math.radians(twist_msg.angular.z * 60)#
+    angular_velocity = math.radians(twist_msg.angular.z * 60)
 
     self.left_motor_speed = ((linear_velocity + (angular_velocity * b / 2)) / r) * scale_factor
     self.right_motor_speed = ((linear_velocity - (angular_velocity * b / 2)) / r) * scale_factor
