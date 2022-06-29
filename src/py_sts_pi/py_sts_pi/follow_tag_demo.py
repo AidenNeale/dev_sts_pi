@@ -5,6 +5,7 @@
 # - https://automaticaddison.com
 
 # Import the necessary libraries
+import time
 import rclpy  # Python library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
 from sts_pi_interfaces.msg import ArUcoInfo
@@ -35,7 +36,7 @@ class FlashcardDemo(Node):
     )
 
     self.arucoTag = None
-
+    self.tag_last_seen = time.time()
 
   def listener_callback(self, data):
     """
@@ -48,8 +49,12 @@ class FlashcardDemo(Node):
     
     self.arucoTag = data
     if data.id == -1:
-      self.spin_those_bots()
+      if ((time.time() - self.tag_last_seen) > 5):
+        self.spin_those_bots()
+      else:
+        self.stop_those_bots()
     else:
+      self.tag_last_seen = time.time()
       self.move_those_bots()
 
   def move_those_bots(self):
@@ -73,7 +78,11 @@ class FlashcardDemo(Node):
 
   def spin_those_bots(self):
     msg = Twist()
-    self.combinedMovement(msg, 0.0, 0.25)
+    self.combinedMovement(msg, 0.0, 0.275)
+
+  def stop_those_bots(self):
+    msg = Twist()
+    self.stopMovement(msg)
 
   def stopMovement(self, msg):
     msg.linear.x = 0.0
