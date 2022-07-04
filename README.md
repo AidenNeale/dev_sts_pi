@@ -17,31 +17,34 @@ NOTE: This is an extremely comphrensive set of installation steps such that this
   * Flash Ubuntu (or Ubuntu MATE) 20.04 onto an SD card
   * Insert SD card into the Pi 4 and connect a monitor, keyboard and mouse and boot the Pi
   * Follow through installation of OS
-  * sudo apt install -y openssh-client openssh-server net-tools python3-pip  python3-smbus git 
-  * pip3 install explorerhat opencv-python opencv-contrib-python
+  * `sudo apt install -y openssh-client openssh-server net-tools python3-pip  python3-smbus git`
+  * `pip3 install explorerhat opencv-python opencv-contrib-python`
   * Install ROS2 Foxy
-  * Run sudo apt install -y python3-colcon-common-extensions
-  * Clone the Repository: git clone https://github.com/AidenNeale/dev_sts_pi.git
-  * Move into the repository: cd dev_sts_pi/
-  * colcon build --symlink-install
+  * `echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc`
+  * Run `sudo apt install -y python3-colcon-common-extensions`
+  * Clone the Repository: `git clone https://github.com/AidenNeale/dev_sts_pi.git`
+  * Move into the repository: `cd dev_sts_pi/`
+  * `colcon build --symlink-install`
   * Set environment variable on robot to determine role of robot, e.g. driver_1, follower_1, etc. 
   `echo "export ROBOT_ID=driver_1" >> ~/.bashrc`
+  * source ~/.bashrc
   * Look at Usage steps to use robot
 
 ## Usage
 - Assuming correct installation and setup, create three terminals and ssh into two robots.
 - On each robot
   - Navigate to the root directory of the project (/dev_sts_pi)
-  - Run: bash setup_perms.sh and enter the password when prompted
-  - Run: source install/setup.bash
-  - Run: ros2 launch py_sts_pi sts.launch.py
+  - Run: `bash setup_perms.sh` and enter the password when prompted
+  - Run: `source install/setup.bash`
+  - Run: `ros2 launch py_sts_pi sts.launch.py`
 - On the third terminal:
   - Navigate to the root directory of the project (/dev_sts_pi)
-  - Run: source install/setup.bash
-  - Run: ros2 launch py_sts_pi computer.launch.py
+  - Run: `source install/setup.bash`
+  - Run: `ros2 launch py_sts_pi computer.launch.py`
 
 ## To Do
-
+1. Create a line following demonstration
+2. Create an autonomous driver controlled through camera segmentation obstacle avoidance
 
 ## Troubleshooting
 
