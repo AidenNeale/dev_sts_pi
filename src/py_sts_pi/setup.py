@@ -31,8 +31,7 @@ setup(
             'flashcard = py_sts_pi.flashcard_demo:main',
             'follow_tag = py_sts_pi.follow_tag_demo:main',
             'joystick = py_sts_pi.joystick_demo:main',
-            'threshold = py_sts_pi.threshold_display:main',
-            'simpub = py_sts_pi.simpub:main'
+            'threshold = py_sts_pi.threshold_display:main'
         ],
     },
 )
