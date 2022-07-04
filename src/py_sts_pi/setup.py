@@ -19,7 +19,7 @@ setup(
     zip_safe=True,
     maintainer='Aiden Neale',
     maintainer_email='arn519@york.ac.uk',
-    description='TODO: Package description',
+    description='This is the package for the University of Yorks Computer Science Open Day demonstration. This repository is intended to work with Ubuntu 20.04, ROS2 - Foxy Fitzgerald and the STS-Pi Roving Robot',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
