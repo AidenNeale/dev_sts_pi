@@ -1,9 +1,3 @@
-# Basic ROS 2 program to subscribe to real-time streaming
-# video from your built-in webcam
-# Author:
-# - Addison Sears-Collins
-# - https://automaticaddison.com
-
 # Import the necessary libraries
 import cv2  # OpenCV library
 import rclpy  # Python library for ROS 2
@@ -14,7 +8,14 @@ from sensor_msgs.msg import CompressedImage  # Image is the message type
 
 class ImageSubscriber(Node):
   """
-  Create an ImageSubscriber class, which is a subclass of the Node class.
+  Create an ImageSubscriber class, which is a subclass of the Node class. The purpose
+  of this node is to subscribe to a topic with type CompressedImage and display the frame
+  in a window locally where the node is ran.
+
+  Subscription:
+  -------------
+  /frame: CompressedImage
+    Compressed ROS2 Image
   """
   def __init__(self):
     """
@@ -24,7 +25,7 @@ class ImageSubscriber(Node):
     super().__init__('display')
 
     # Create the subscriber. This subscriber will receive an Image
-    # from the video_frames topic. The queue size is 10 messages.
+    # from the frame topic. The queue size is 10 messages.
     self.subscription = self.create_subscription(
       CompressedImage,
       'frame',
@@ -37,14 +38,12 @@ class ImageSubscriber(Node):
 
   def listener_callback(self, data):
     """
-    Callback function.
+    Callback function. This is called
+    whenever a message is published to the subscribed topic.
     """
-    # Display the message on the console
-    # self.get_logger().info('Receiving video frame')
-
     # Convert ROS Image message to OpenCV image
     current_frame = self.br.compressed_imgmsg_to_cv2(data)
-    cv2.namedWindow('camera',cv2.WINDOW_NORMAL)
+    cv2.namedWindow('camera',cv2.WINDOW_NORMAL) # Allows window to be resized
     # Display image
     cv2.imshow("camera", current_frame)
 
@@ -56,15 +55,15 @@ def main(args=None):
   rclpy.init(args=args)
 
   # Create the node
-  image_subscriber = ImageSubscriber()
+  display = ImageSubscriber()
 
   # Spin the node so the callback function is called.
-  rclpy.spin(image_subscriber)
+  rclpy.spin(display)
 
   # Destroy the node explicitly
   # (optional - otherwise it will be done automatically
   # when the garbage collector destroys the node object)
-  image_subscriber.destroy_node()
+  display.destroy_node()
 
   # Shutdown the ROS client library for Python
   rclpy.shutdown()

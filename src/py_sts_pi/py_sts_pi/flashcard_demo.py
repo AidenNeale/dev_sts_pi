@@ -1,9 +1,3 @@
-# Basic ROS 2 program to subscribe to real-time streaming
-# video from your built-in webcam
-# Author:
-# - Addison Sears-Collins
-# - https://automaticaddison.com
-
 # Import the necessary libraries
 import rclpy  # Python library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
@@ -12,7 +6,20 @@ from geometry_msgs.msg import Twist
 
 class FlashcardDemo(Node):
   """
-  Create an ImageSubscriber class, which is a subclass of the Node class.
+  Create an FlashcardDemo class, which is a subclass of the Node class. The purpose
+  of this node is to implement a demo where depending on the subscribed tag passed,
+  different motor commands will be sent.
+
+  Subscription:
+  -------------
+  /aruco_tag: Custom Message ArUcoInfo
+    Information about detected ArUco Tag (ID, X, Y, Z, Theta),
+    publishes -1 if no tag detected
+
+  Publisher:
+  ----------
+  /twist_motor: Twist
+    Sends a twist dependent on which task it performs
   """
   def __init__(self):
     """
@@ -40,6 +47,7 @@ class FlashcardDemo(Node):
     # Create the timer
     self.timer = self.create_timer(timer_period, self.timer_callback)
 
+    # Store basic information about the ArUco tag passed
     self.arucoID = -1
     self.arucoTag = None
     self.movePosition = 0
@@ -47,13 +55,10 @@ class FlashcardDemo(Node):
 
   def listener_callback(self, data):
     """
-    Callback function.
+    Callback function. This is called whenever a message is published to the
+    subscribed topic. This function sets tag information if the tag received
+    differs from the last received tag.
     """
-    # Display the message on the console
-    # self.get_logger().info('Receiving video frame')
-
-    # Convert ROS Image message to OpenCV image
-
     if self.arucoID != data.id:
       self.arucoID = data.id
       self.arucoTag = data
@@ -83,29 +88,73 @@ class FlashcardDemo(Node):
 
 
   def stopMovement(self, msg):
+    """
+    This sends a Twist that equates to no linear or angular velocity
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    """
     msg.linear.x = 0.0
     msg.angular.z = 0.0
     self.publisher_.publish(msg)
 
   def linearMovement(self, msg, speed):
+    """
+    This sends a Twist that equates to no angular velocity and variable linear velocity
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    """
     msg.linear.x = speed
     msg.angular.z = 0.0
     self.publisher_.publish(msg)
 
   def angularMovement(self, msg, angular):
+    """
+    This sends a Twist that equates to maximum linear velocity
+    and variable angular velocity
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    """
     msg.linear.x = 1.0
     msg.angular.z = angular
     self.publisher_.publish(msg)
 
   def combinedMovement(self, msg, speed, angular):
+    """
+    This function allows for complete variable control of linear and angular
+    velocity published.
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    """
     msg.linear.x = speed
     msg.angular.z = angular
     self.publisher_.publish(msg)
 
   def simpleSquare(self, msg):
+    """
+    This function attempts to draw a square dependent on the Twist messages set at
+    different time frames. NOTE: This functionality is unlikely to work due to differing
+    friction between the wheels and floor surface.
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    """
     if self.movePosition >= 44:
       self.movePosition = 0
-    
+
     if self.movePosition < 30:
       self.linearMovement(msg, 1.0)
       self.movePosition += 1

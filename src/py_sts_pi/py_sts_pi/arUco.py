@@ -1,9 +1,3 @@
-# Basic ROS 2 program to subscribe to real-time streaming
-# video from your built-in webcam
-# Author:
-# - Addison Sears-Collins
-# - https://automaticaddison.com
-
 # Import the necessary libraries
 import math
 
@@ -18,6 +12,22 @@ from sts_pi_interfaces.msg import ArUcoInfo
 class ArUcoTagReader(Node):
   """
   Create an ArUcoTagReader class, which is a subclass of the Node class.
+  The purpose of this node is to analyse a subscribed frame for detection of
+  an ArUco tag.
+
+  Subscription:
+  -------------
+  /video_frames: CompressedImage
+    Compressed ROS2 Image
+
+  Publisher:
+  ----------
+  /frame: CompressedImage
+    Compressed ROS2 Image
+
+  /aruco_tag: Custom Message ArUcoInfo
+    Information about detected ArUco Tag (ID, X, Y, Z, Theta),
+    publishes -1 if no tag detected
   """
   def __init__(self):
     """
@@ -30,6 +40,7 @@ class ArUcoTagReader(Node):
     '''
     # Used to store frame retrieved by subscription
     self.current_frame = None
+    # ArUco Variables
     self.arUcoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_100)
     self.arUcoParams = cv2.aruco.DetectorParameters_create()
     # Used to convert between ROS and OpenCV images
@@ -55,6 +66,14 @@ class ArUcoTagReader(Node):
   def get_robot_centre(self, topLeft, bottomRight):
     '''
     Calculates the centre of the robot by taking the averages of the Tag Corners
+
+    Parameters:
+    -----------
+    topLeft -> List
+      A list containing the X, Y coordinates of the top left corner of the tag
+
+    bottomRight -> List
+      A list containing the X, Y coordinates of the bottom right corner of the tag
     Returns:
     --------
     Coordinates -> tuple
@@ -68,11 +87,12 @@ class ArUcoTagReader(Node):
 
   def listener_callback(self, data):
     """
-    Callback function for subscribing to video frame feed.
+    Callback function for subscribing to video frame feed. This is called
+    whenever a message is published to the subscribed topic.
 
     Subscription:
     -------------
-    video_frames: This is a default ROS2 msg format of a compressed image from sensor_msgs.msgs.CompressedImage
+    /video_frames: This is a default ROS2 msg format of a compressed image from sensor_msgs.msgs.CompressedImage
 
     Published:
     -----------
@@ -85,23 +105,18 @@ class ArUcoTagReader(Node):
 
     frame: This is video_frames with outlines drawn around aruco tags present in the frame
     """
-    # Display the message on the console
-    # self.get_logger().info('Receiving video frame')
 
-    # Convert ROS Image message to OpenCV image
+    # Convert ROS2 Image message to OpenCV image
     self.current_frame = self.br.compressed_imgmsg_to_cv2(data)
 
     if self.current_frame is not None: # Fail-safe to prevent crashes if frame isn't sent correctly
       msg = ArUcoInfo()
       (tags, ids, rejected) = cv2.aruco.detectMarkers(self.current_frame,
         self.arUcoDict, parameters=self.arUcoParams)
-      if (len(tags) > 0):
-        # cv2.aruco.drawDetectedMarkers(self.current_frame, tags, borderColor = (0, 255, 0), width=4)
-
-        if (len(tags) > 1):
+      if (len(tags) > 0): # Ensures presence of at least one tag
+        if (len(tags) > 1): # Ensures presence of exactly one tag
           self.get_logger().info('Only one ArUco tag can be in frame at any one time')
         else:
-          
           corners = tags[0].tolist()[0]
           cv2.line(self.current_frame, (int(corners[0][0]), int(corners[0][1])), (int(corners[1][0]), int(corners[1][1])), (0, 255, 0), 10, lineType=cv2.LINE_AA)
           cv2.line(self.current_frame, (int(corners[1][0]), int(corners[1][1])), (int(corners[2][0]), int(corners[2][1])), (0, 255, 0), 10, lineType=cv2.LINE_AA)
@@ -129,6 +144,7 @@ class ArUcoTagReader(Node):
             # Publish ArUco Tag information if one is present
             self.publisher_aruco_.publish(msg)
       else:
+        # Publishes -1 as the indication of no tag
         msg.id = -1
         msg.x  = -1.0
         msg.y  = -1.0
