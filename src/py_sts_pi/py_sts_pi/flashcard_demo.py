@@ -100,6 +100,7 @@ class FlashcardDemo(Node):
     msg.angular.z = 0.0
     self.publisher_.publish(msg)
 
+
   def linearMovement(self, msg, speed):
     """
     This sends a Twist that equates to no angular velocity and variable linear velocity
@@ -108,10 +109,13 @@ class FlashcardDemo(Node):
     -----------
     msg: Twist
       This is an empty Twist message
+    speed: float
+      A value ranging between -1.0 and 1.0
     """
     msg.linear.x = speed
     msg.angular.z = 0.0
     self.publisher_.publish(msg)
+
 
   def angularMovement(self, msg, angular):
     """
@@ -122,10 +126,13 @@ class FlashcardDemo(Node):
     -----------
     msg: Twist
       This is an empty Twist message
+    angular: float
+      A value ranging between -1.0 and 1.0
     """
     msg.linear.x = 1.0
     msg.angular.z = angular
     self.publisher_.publish(msg)
+
 
   def combinedMovement(self, msg, speed, angular):
     """
@@ -136,10 +143,15 @@ class FlashcardDemo(Node):
     -----------
     msg: Twist
       This is an empty Twist message
+    speed: float
+      A value ranging between -1.0 and 1.0
+    angular: float
+      A value ranging between -1.0 and 1.0
     """
     msg.linear.x = speed
     msg.angular.z = angular
     self.publisher_.publish(msg)
+
 
   def simpleSquare(self, msg):
     """
@@ -161,6 +173,7 @@ class FlashcardDemo(Node):
     elif self.movePosition < 44: # 44 is a lil' little, 45 a lil' too much
       self.combinedMovement(msg, 1.0, 1.0)
       self.movePosition += 1
+
 
 def main(args=None):
 

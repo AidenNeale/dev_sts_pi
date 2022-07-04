@@ -1,9 +1,3 @@
-# Basic ROS 2 program to subscribe to real-time streaming
-# video from your built-in webcam
-# Author:
-# - Addison Sears-Collins
-# - https://automaticaddison.com
-
 # Import the necessary libraries
 import rclpy  # Python library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
@@ -12,7 +6,18 @@ from geometry_msgs.msg import Twist
 
 class Joystick(Node):
   """
-  Create an ImageSubscriber class, which is a subclass of the Node class.
+  Create an Joystick class, which is a subclass of the Node class. This node
+  subscribes to Joy and transforms those measurements into Twist messages
+
+  Subscription:
+  -------------
+  /joy: Joy
+    Receives a Joy message consisting of "Axes" and "Buttons" arrays
+
+  Publisher:
+  ----------
+  /twist_motor: Twist
+    Sends a twist dependent on which task it performs
   """
   def __init__(self):
     """
@@ -37,34 +42,31 @@ class Joystick(Node):
 
   def listener_callback(self, data):
     """
-    Callback function.
+    Callback function. This is called whenever anything is published to the topic.
+    This function interprets controller messages and transforms that into the appropriate
+    movement
     """
-    # Display the message on the console
-    # self.get_logger().info('Receiving video frame')
-
     msg = Twist()
 
     # Convert ROS Image message to OpenCV image
     self.joystick = data.axes # [0] = Left and Right, [1] = Up and Down
     self.combinedMovement(msg, self.joystick[1], self.joystick[0])
-    
 
-  def stopMovement(self, msg):
-    msg.linear.x = 0.0
-    msg.angular.z = 0.0
-    self.publisher_.publish(msg)
-
-  def linearMovement(self, msg, speed):
-    msg.linear.x = speed
-    msg.angular.z = 0.0
-    self.publisher_.publish(msg)
-
-  def angularMovement(self, msg, angular):
-    msg.linear.x = 1.0
-    msg.angular.z = angular
-    self.publisher_.publish(msg)
 
   def combinedMovement(self, msg, speed, angular):
+    """
+    This function allows for complete variable control of linear and angular
+    velocity published.
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    speed: float
+      A value ranging between -1.0 and 1.0
+    angular: float
+      A value ranging between -1.0 and 1.0
+    """
     msg.linear.x = speed
     msg.angular.z = angular
     self.publisher_.publish(msg)

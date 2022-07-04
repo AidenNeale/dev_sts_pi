@@ -1,9 +1,3 @@
-# Basic ROS 2 program to subscribe to real-time streaming
-# video from your built-in webcam
-# Author:
-# - Addison Sears-Collins
-# - https://automaticaddison.com
-
 # Import the necessary libraries
 import time
 import rclpy  # Python library for ROS 2
@@ -11,16 +5,18 @@ from rclpy.node import Node  # Handles the creation of nodes
 from sts_pi_interfaces.msg import ArUcoInfo
 from geometry_msgs.msg import Twist
 
-class FlashcardDemo(Node):
+class FollowTagDemo(Node):
   """
-  Create an ImageSubscriber class, which is a subclass of the Node class.
+  Create an FollowTagDemo class, which is a subclass of the Node class. This node subscribes
+  to aruco_tag, determines where it is on the screen and sends Twist messages to attempt to
+  ensure the robot aligns as close to the centre of the screen as possible.
   """
   def __init__(self):
     """
-    Class constructor to set up the node
+    Class constructor to set up the node.
     """
     # Initiate the Node class's constructor and give it a name
-    super().__init__('FlashcardDemo')
+    super().__init__('FollowTagDemo')
 
     self.subscription = self.create_subscription(
       ArUcoInfo,
@@ -35,18 +31,20 @@ class FlashcardDemo(Node):
       10
     )
 
+    # Variable initialisation
     self.arucoTag = None
     self.tag_last_seen = time.time()
 
+
   def listener_callback(self, data):
     """
-    Callback function.
+    Callback function - this is called every time the topic is published to. This
+    function illicites the following behaviour:
+    - If no Tag
+      - Wait 5 seconds and then spin slowly
+    - If Tag:
+      - Head towards tag ensuring tag remains centred
     """
-    # Display the message on the console
-    # self.get_logger().info('Receiving video frame')
-
-    # Convert ROS Image message to OpenCV image
-    
     self.arucoTag = data
     if data.id == -1:
       if ((time.time() - self.tag_last_seen) > 5):
@@ -57,7 +55,13 @@ class FlashcardDemo(Node):
       self.tag_last_seen = time.time()
       self.move_those_bots()
 
+
   def move_those_bots(self):
+    """
+    This function controls the quantatitive movement through Twist messages dependent
+    on the tags location relative to the frame. Sharper turns occur if the tag is further
+    from the centre of the image.
+    """
     msg = Twist()
     if (self.arucoTag.x <= 150):
       #turn right
@@ -77,29 +81,65 @@ class FlashcardDemo(Node):
 
 
   def spin_those_bots(self):
+    """
+    This function causes the robot to spin slowly anti-clockwise
+    """
     msg = Twist()
     self.combinedMovement(msg, 0.0, 0.325)
 
+
   def stop_those_bots(self):
+    """
+    This function sends a stop Twist to the robot.
+    """
     msg = Twist()
     self.stopMovement(msg)
 
+
   def stopMovement(self, msg):
+    """
+    This sends a Twist that equates to no linear or angular velocity
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    """
     msg.linear.x = 0.0
     msg.angular.z = 0.0
     self.publisher_.publish(msg)
 
+
   def linearMovement(self, msg, speed):
+    """
+    This sends a Twist that equates to no angular velocity and variable linear velocity
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    speed: float
+      A value ranging between -1.0 and 1.0
+    """
     msg.linear.x = speed
     msg.angular.z = 0.0
     self.publisher_.publish(msg)
 
-  def angularMovement(self, msg, angular):
-    msg.linear.x = 1.0
-    msg.angular.z = angular
-    self.publisher_.publish(msg)
 
   def combinedMovement(self, msg, speed, angular):
+    """
+    This function allows for complete variable control of linear and angular
+    velocity published.
+
+    Parameters:
+    -----------
+    msg: Twist
+      This is an empty Twist message
+    speed: float
+      A value ranging between -1.0 and 1.0
+    angular: float
+      A value ranging between -1.0 and 1.0
+    """
     msg.linear.x = speed
     msg.angular.z = angular
     self.publisher_.publish(msg)
@@ -111,15 +151,15 @@ def main(args=None):
   rclpy.init(args=args)
 
   # Create the node
-  flashcard_node = FlashcardDemo()
+  follow_tag_demo = FollowTagDemo()
 
   # Spin the node so the callback function is called.
-  rclpy.spin(flashcard_node)
+  rclpy.spin(follow_tag_demo)
 
   # Destroy the node explicitly
   # (optional - otherwise it will be done automatically
   # when the garbage collector destroys the node object)
-  flashcard_node.destroy_node()
+  follow_tag_demo.destroy_node()
 
   # Shutdown the ROS client library for Python
   rclpy.shutdown()

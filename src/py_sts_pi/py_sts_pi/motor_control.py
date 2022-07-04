@@ -9,7 +9,18 @@ MAX_SPEED = 100
 
 class Motors(Node):
   """
-  Create an ImagePublisher class, which is a subclass of the Node class.
+  Create an Motors class, which is a subclass of the Node class. The purpose of the
+  node is to send motor control commands using the explorerhat library.
+
+  Subscription:
+  -------------
+  /twist_motor: Twist
+    Twist message containing linear and angular velocity ratios ranging from -1.0 and 1.0
+
+  Publisher:
+  ----------
+  /motor_speeds: Custom Message ~ MotorSpeeds
+    Publishes left and right motor speeds as float
   """
   def __init__(self):
     """
@@ -18,6 +29,7 @@ class Motors(Node):
     # Initiate the Node class's constructor and give it a name
     super().__init__('motor_control')
 
+    #Variable Initialisation
     self.left_motor_speed = 0.0
     self.right_motor_speed = 0.0
     self.instruction = Twist()
@@ -29,8 +41,8 @@ class Motors(Node):
       10)
     self.subscription # prevent unused variable warning
 
-    # Create the publisher. This publisher will publish an Image
-    # to the video_frames topic. The queue size is 10 messages.
+    # Create the publisher. This publisher will publish MotorSpeeds
+    # to the motor_speeds topic. The queue size is 10 messages.
     self.publisher_ = self.create_publisher(MotorSpeeds, 'motor_speeds', 10)
 
     # We will publish a message every 0.05 seconds
@@ -41,9 +53,18 @@ class Motors(Node):
 
 
   def determine_speed(self, twist_msg):
-    max_lin_speed = 0.146
-    b = 0.12
-    r = 0.025
+    """
+    This function utilises differential wheeled kinematics to calculate the
+    left and right motor speeds using the knowledge that the maximum linear speed is
+    0.14m/s on a concrete floor.
+    Parameters:
+    -----------
+    twist_msg: Twist
+      This is the twist message received in the callback
+    """
+    max_lin_speed = 0.146 #Maximum speed in m/s
+    b = 0.12 #Length of wheel-wheel
+    r = 0.025 #Radius of wheel
     scale_factor = 100 / (max_lin_speed / r)
 
     linear_velocity = twist_msg.linear.x * max_lin_speed
@@ -62,13 +83,15 @@ class Motors(Node):
       self.right_motor_speed = -MAX_SPEED
 
 
-#2m: 13.7s 1m: 6.85s 0.146m/s
   def listener_callback(self, data):
-    # 'data' is in the form of a Twist
-    # This is turned into relative movement 
+    """
+    This callback function is called whenever anything is published to the topic.
+    This function is intended to take a Twist message and transform it to a value
+    that the motors can understand ( a value between 0 - 100).
+    """
     self.determine_speed(data)
-    # self.left_motor_speed = self.right_motor_speed = 100
-    #Turn instruction to speed
+
+    # As motor forwards cannot take negative values, this handles reversing
     if self.left_motor_speed < 0:
       explorerhat.motor.one.backwards(abs(self.left_motor_speed))
     else:
@@ -80,11 +103,14 @@ class Motors(Node):
 
 
   def timer_callback(self):
+    """
+    This function is used to publish motor speeds every 0.05 seconds.
+    """
     msg = MotorSpeeds()
     msg.left = float(self.left_motor_speed)
     msg.right = float(self.right_motor_speed)
     self.publisher_.publish(msg)
-      
+
 
 def main(args=None):
 

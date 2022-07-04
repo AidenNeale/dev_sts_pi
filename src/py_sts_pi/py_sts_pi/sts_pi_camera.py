@@ -1,9 +1,3 @@
-# Basic ROS 2 program to publish real-time streaming
-# video from your built-in webcam
-# Author:
-# - Addison Sears-Collins
-# - https://automaticaddison.com
-
 # Import the necessary libraries
 import cv2
 import rclpy # Python Client Library for ROS 2
@@ -13,7 +7,13 @@ from cv_bridge import CvBridge # Package to convert between ROS and OpenCV Image
 
 class ImagePublisher(Node):
   """
-  Create an ImagePublisher class, which is a subclass of the Node class.
+  Create an ImagePublisher class, which is a subclass of the Node class. This node's
+  purpose is to read and publish camera feed.
+
+  Publisher:
+  ----------
+  /video_frames: CompressedImage
+    ROS2 Compressed Image
   """
   def __init__(self):
     """
@@ -26,19 +26,21 @@ class ImagePublisher(Node):
     # to the video_frames topic. The queue size is 10 messages.
     self.publisher_ = self.create_publisher(CompressedImage, 'video_frames', 10)
 
-    # We will publish a message every 0.01 seconds
+    # We will publish a message every 0.05 seconds
     timer_period = 0.05  # seconds
 
     # Create the timer
     self.timer = self.create_timer(timer_period, self.timer_callback)
 
     # Create a VideoCapture object
-    # The argument '0' gets the default webcam.
+    # The argument '0' gets the default cam.
     self.cap = cv2.VideoCapture(0)
+    # Set X, Y Resolution for camera image
     self.cap.set(3, 640)
     self.cap.set(4, 480)
     # Used to convert between ROS and OpenCV images
     self.br = CvBridge()
+
 
   def timer_callback(self):
     """
@@ -48,18 +50,15 @@ class ImagePublisher(Node):
     # Capture frame-by-frame
     # This method returns True/False as well
     # as the video frame.
-      # self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
     ret, frame = self.cap.read()
 
     if ret == True:
-      frame = cv2.rotate(frame, cv2.ROTATE_180)
+      frame = cv2.rotate(frame, cv2.ROTATE_180) # Flips the image the correct orientation
       # Publish the image.
       # The 'cv2_to_imgmsg' method converts an OpenCV
       # image to a ROS 2 image message
       self.publisher_.publish(self.br.cv2_to_compressed_imgmsg(frame))
 
-    # Display the message on the console
-    # self.get_logger().info('Publishing video frame')
 
 def main(args=None):
 
